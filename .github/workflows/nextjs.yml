@@ -29,6 +29,9 @@ concurrency:
 jobs:
   # Build job
   build:
+    env:
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${{ vars.NEXT_PUBLIC_FIREBASE_API_KEY }}
+      run: echo NEXT_PUBLIC_FIREBASE_API_KEY
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
