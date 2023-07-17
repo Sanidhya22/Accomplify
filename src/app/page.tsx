@@ -1,51 +1,28 @@
 "use client";
 
-import { firestoreDB, initFirebase } from "../../firebase/firebaseApp";
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  signInWithRedirect,
-} from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/navigation";
-import { doc, setDoc } from "firebase/firestore";
-export default function Home() {
-  const router = useRouter();
-  const app = initFirebase();
-  console.log(app);
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-  const signIn = async () => {
-    const result = await signInWithPopup(auth, provider);
-    console.log(result.user);
-  };
+import { useContext } from "react";
+import { FirebaseProvider, useFirebase } from "../../firebase/firebaseApp";
+import { log } from "console";
 
-  const [user, loading] = useAuthState(auth);
-  // if (loading) {
-  //   return <div>Loading</div>;
-  // }
-  // if (user) {
-  //   return <div>Welcome {user.displayName} </div>;
-  // }
-  const addDB = async () => {
-    // Add a new document in collection "cities"
-    await setDoc(doc(firestoreDB, "cities", "LA"), {
-      name: "Los Angeles",
-      state: "CA",
-      country: "USA",
-    });
-  };
+export default function Home() {
+  // const addDB = async () => {
+  //   // Add a new document in collection "cities"
+  //   await setDoc(doc(firestoreDB, "cities", "LA"), {
+  //     name: "Los Angeles",
+  //     state: "CA",
+  //     country: "USA",
+  //   });
+  // };s
+  const t = useFirebase();
+  console.log(t);
+
   return (
     <main>
-      {user ? (
-        <h1>Hello {user.displayName}</h1>
+      {t?.user?.displayName ? (
+        <h1>Hello {t.user.displayName}</h1>
       ) : (
-        <button onClick={signIn}>Sign in</button>
+        <button onClick={t?.signinWithGoogle}>Sign in</button>
       )}
-      {/* <button onClick={addDB}>Add DB</button> */}
-      <h1>{process.env.NEXT_PUBLIC_FIREBASE_APP_ID}</h1>
-      <h1>{process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}</h1>
     </main>
   );
 }
