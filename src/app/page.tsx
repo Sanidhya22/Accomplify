@@ -44,6 +44,8 @@ export default function Home() {
         <button onClick={signIn}>Sign in</button>
       )}
       {/* <button onClick={addDB}>Add DB</button> */}
+      <h1>{process.env.NEXT_PUBLIC_FIREBASE_APP_ID}</h1>
+      <h1>{process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}</h1>
     </main>
   );
 }
