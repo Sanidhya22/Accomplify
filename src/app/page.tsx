@@ -1,9 +1,15 @@
 "use client";
 
-import { initFirebase } from "../../firebase/firebaseApp";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { firestoreDB, initFirebase } from "../../firebase/firebaseApp";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signInWithRedirect,
+} from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/navigation";
+import { doc, setDoc } from "firebase/firestore";
 export default function Home() {
   const router = useRouter();
   const app = initFirebase();
@@ -16,17 +22,28 @@ export default function Home() {
   };
 
   const [user, loading] = useAuthState(auth);
-  if (loading) {
-    return <div>Loading</div>;
-  }
-  if (user) {
-    router.push("/text");
-    return <div>Welcome {user.displayName} </div>;
-  }
+  // if (loading) {
+  //   return <div>Loading</div>;
+  // }
+  // if (user) {
+  //   return <div>Welcome {user.displayName} </div>;
+  // }
+  const addDB = async () => {
+    // Add a new document in collection "cities"
+    await setDoc(doc(firestoreDB, "cities", "LA"), {
+      name: "Los Angeles",
+      state: "CA",
+      country: "USA",
+    });
+  };
   return (
     <main>
-      <h1>Sign in to Continue</h1>
-      <button onClick={signIn}>Sign in</button>
+      {user ? (
+        <h1>Hello {user.displayName}</h1>
+      ) : (
+        <button onClick={signIn}>Sign in</button>
+      )}
+      {/* <button onClick={addDB}>Add DB</button> */}
     </main>
   );
 }
